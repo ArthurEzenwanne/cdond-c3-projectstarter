@@ -197,8 +197,8 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apt update -y
-            apt install -y python3-pip tar gzip ansible awscli
+            apk update -y
+            apk install -y python3-pip tar gzip ansible awscli
       - run:
           name: Configure server
           command: |
