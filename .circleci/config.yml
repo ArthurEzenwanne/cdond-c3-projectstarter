@@ -197,9 +197,7 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here
-            apk update
             pip install ansible awscli
-            apk update
       - run:
           name: Configure server
           command: |
