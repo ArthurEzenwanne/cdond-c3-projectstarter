@@ -220,8 +220,16 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      - attach_workspace:
+          at: ~/
       - restore_cache:
           keys: [backend-build]
+      - run:
+          name: Install dependencies
+          command: |
+            # Your code here
+            npm install -y tar gzip ansible aws-cli
+            # apk add --update --no-cache tar gzip ansible aws-cli
       - run:
           name: Run migrations
           command: |
