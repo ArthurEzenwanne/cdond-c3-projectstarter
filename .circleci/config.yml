@@ -148,7 +148,7 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - run: npm install -y tar gzip
+      - run: yum install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -177,35 +177,40 @@ jobs:
             --output text >> ~/project/.circleci/ansible/inventory.txt
             # exit 1
       - persist_to_workspace:
-          # root: ~/
-          root: .circleci/ansible
+          root: ~/
+          # root: .circleci/ansible
           paths:
-            - inventory.txt
+            - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure  
       - destroy-environment  
 
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: python:3.7-alpine3.11
+      - image: python:3.7-alpine3.16
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["9b:34:78:6f:cb:95:cc:75:61:af:3a:3e:3a:bb:72:d3"]
       - attach_workspace:
-          # at: ~/
-          at: /tmp/.circleci/ansible
+          at: ~/
+          # at: /tmp/.circleci/ansible
       - run:
           name: Install dependencies
           command: |
             # Your code here
-            pip install ansible awscli
+            apk add --update --no-cache tar gzip ansible aws-cli
       - run:
           name: Configure server
           command: |
             # Your code here
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
+      - persist_to_workspace:
+          root: ~/
+          # root: .circleci/ansible
+          paths:
+            - project/backend
       # Here's where you will add some code to rollback on failure   
       - destroy-environment   
 
