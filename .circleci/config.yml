@@ -198,7 +198,8 @@ jobs:
           command: |
             # Your code here
             apk update
-            apk add python3-pip tar gzip ansible awscli
+            pip install ansible awscli
+            apk update
       - run:
           name: Configure server
           command: |
