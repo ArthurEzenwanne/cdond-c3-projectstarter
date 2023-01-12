@@ -254,12 +254,15 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/
-      - restore_cache:
-          keys: [frontend-build]
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       # your code here
+      # - restore_cache:
+      #     keys: [frontend-build]
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            # apk add --update --no-cache tar gzip nodejs npm aws-cli curl
+            npm update
+            npm install -y tar gzip nodejs npm aws-cli curl
       - run:
           name: Get backend url
           command: |
