@@ -14,7 +14,7 @@ commands:
           when: on_fail
           command: |
             # Your code here
-            # aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
+            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -28,13 +28,14 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
+            SUCCESS = $(curl --insecure  https://kvdb.io/31ftXb2cL3BbytJNTvqQsF/migration_eb8ca9d)
+            # SUCCESS = $(curl --insecure  https://kvdb.io/31ftXb2cL3BbytJNTvqQsF/migration_${CIRCLE_WORKFLOW_ID:0:7})
             if(( $SUCCESS==1 )); 
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              cd ~/project/backend
+              npm install
+              #  Add revert code here.
+              npm run migration:revert
             fi
             
 jobs:
@@ -301,7 +302,7 @@ jobs:
           name: Install dependencies
           command: |
             # your code here
-            apk add --update --no-cache tar gzip ansible aws-cli
+            apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
       - run:
           name: Deploy backend
           command: |
@@ -316,10 +317,9 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # - save_cache:
-      #     paths: [backend/node_modules]
-      #     key: backend-build
       # Here's where you will add some code to rollback on failure  
+      - destroy-environment
+      - revert-migrations  
 
   # smoke-test:
   #   docker:
