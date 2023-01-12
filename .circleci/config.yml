@@ -228,8 +228,10 @@ jobs:
           name: Install dependencies
           command: |
             # Your code here            
-            sudo apt update
-            sudo apt upgrade -y
+            # sudo apt update
+            # sudo apt upgrade -y         
+            # npm update
+            # sudo apt upgrade -y
       - run:
           name: Run migrations
           command: |
