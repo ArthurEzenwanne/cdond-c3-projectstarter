@@ -18,24 +18,24 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
-  # revert-migrations:
-  #   description: Revert the last migration if successfully run in the current workflow.
-  #   # parameters:
-  #     # Add parameter here     
-  #   steps:
-  #     - run:
-  #         name: Revert migrations
-  #         # Add when this will run
-  #         command: |
-  #           # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-  #           SUCCESS = 1
-  #           if(( $SUCCESS==1 )); 
-  #           then
-  #           #  cd ~/project/backend
-  #           #  npm install
-  #           #  Add revert code here. You can find this in the Getting Started section.
-  #             exit 1
-  #           fi
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    # parameters:
+      # Add parameter here     
+    steps:
+      - run:
+          name: Revert migrations
+          # Add when this will run
+          command: |
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+            SUCCESS = 1
+            if(( $SUCCESS==1 )); 
+            then
+            #  cd ~/project/backend
+            #  npm install
+            #  Add revert code here. You can find this in the Getting Started section.
+              exit 1
+            fi
             
 jobs:
   build-frontend:
@@ -266,16 +266,23 @@ jobs:
             # your code here
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo "API_URL = http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
       - run:
           name: Deploy frontend objects 
           command: |
             # your code here
-      # Here's where you will add some code to rollback on failure      
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            # aws s3 cp dist s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            echo "s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7}"
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment
+      - revert-migrations    
                     
   # deploy-backend:
   #   docker:
