@@ -30,13 +30,16 @@ commands:
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             export SUCCESS=$(curl --insecure  https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7})
             echo ${SUCCESS}
-            if [ ${SUCCESS} == 1 ]; 
+            if [ ${SUCCESS} == 1 ]
             then
-              cd ~/project/backend
-              npm install
-              #  Add revert code here.
-              npm run migrations:revert
-              echo ${SUCCESS}
+                cd ~/project/backend
+                npm install
+                #  Add revert code here.
+                npm run migrations:revert
+                echo ${SUCCESS}
+                return 0
+            else
+                return 1
             fi
             
 jobs:
@@ -240,10 +243,13 @@ jobs:
             # Your code here  
             if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt
             then
-              # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
-              curl https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+                # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
+                curl https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+                cat ~/project/backend/migrations_dump.txt
+                return 0
+            else 
+                return 1
             fi
-            cat ~/project/backend/migrations_dump.txt
             # exit 1
       # Here's where you will add some code to rollback on failure      
       - destroy-environment   
@@ -352,21 +358,21 @@ jobs:
             echo "${API_URL}"
             netstat -ln | grep 3030
             sudo netstat -tulpn
-            
+
             if curl "https://curl.se" | grep "Intrastructure"
             then
-              echo "Test successful"
+                echo "Test successful"
             else
-              echo "Test unsuccessful"
+                echo "Test unsuccessful"
             fi
 
             if curl "${API_URL}/api/status" | grep "ok"
             then
-              echo "Frontend Smoke Test Success"
-              return 0
+                echo "Frontend Smoke Test Success"
+                return 0
             else
-              echo "Frontend Smoke Test Failed"
-              return 1
+                echo "Frontend Smoke Test Failed"
+                return 1
             fi
       - run:
           name: Frontend smoke test.
@@ -376,12 +382,12 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              # Change this to 0 after the job fails
-              echo "Backend Smoke Test Success"
-              return 1
+                # Change this to 0 after the job fails
+                echo "Backend Smoke Test Success"
+                return 1
             else
-              echo "Backend Smoke Test Failed"
-              return 1
+                echo "Backend Smoke Test Failed"
+                return 1
             fi
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
