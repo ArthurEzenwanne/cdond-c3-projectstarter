@@ -28,7 +28,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            export SUCCESS=$(curl --insecure  https://kvdb.io/QRQ8wNg9786iTVpGZbFqks/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            export SUCCESS=$(curl --insecure  https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7})
             echo ${SUCCESS}
             if [ ${SUCCESS} == 1 ]; 
             then
@@ -241,7 +241,7 @@ jobs:
             if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt
             then
               # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
-              curl --insecure https://kvdb.io/QRQ8wNg9786iTVpGZbFqks/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
             cat ~/project/backend/migrations_dump.txt
             # exit 1
@@ -344,20 +344,22 @@ jobs:
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
       - run:
-          name: Backend smoke test.
+          name: Backend smoke test
           command: |
             # your code here
-            # export API_URL="http://${BACKEND_IP}:3030"
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             netstat -ln | grep 3030
             sudo netstat -tulpn
+            
             if curl "https://curl.se" | grep "Intrastructure"
             then
               echo "Test successful"
             else
               echo "Test unsuccessful"
             fi
-            
+
             if curl "${API_URL}/api/status" | grep "ok"
             then
               echo "Frontend Smoke Test Success"
