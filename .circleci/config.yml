@@ -242,8 +242,8 @@ jobs:
           name: Send migration results to kvdb.io 
           command: |
             # Your code here  
-            if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt
-            then
+            # if (( $(curl WEBSITEURL | grep -c "incident-title") > 0 )) ; then
+            if (( grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt )); then
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
                 curl --insecure "https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
                 cat ~/project/backend/migrations_dump.txt
