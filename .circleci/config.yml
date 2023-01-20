@@ -13,7 +13,6 @@ commands:
           when: on_fail
           command: |
             pwd
-            dir
             # Your code here
             echo "Destroying environment: << parameters.workflow_id >> "
             aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
@@ -32,7 +31,6 @@ commands:
           when: on_fail
           command: |
             pwd
-            dir
             echo 'Hello Test'
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             export SUCCESS=$(curl --insecure  "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_<< parameters.workflow_id >>")
@@ -347,8 +345,7 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
       - revert-migrations    
-      
-                    
+                 
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
@@ -388,7 +385,6 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
       - revert-migrations    
-      
 
   smoke-test:
     docker:
