@@ -12,6 +12,8 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            pwd
+            dir
             # Your code here
             echo "Destroying environment: << parameters.workflow_id >> "
             aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
@@ -29,6 +31,8 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
+            pwd
+            dir
             echo 'Hello Test'
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
             export SUCCESS=$(curl --insecure  "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_<< parameters.workflow_id >>")
@@ -36,7 +40,6 @@ commands:
             if [ ${SUCCESS} = 1 ]
             then
                 pwd
-                ls
                 dir
                 cd /backend/
                 npm install
@@ -57,6 +60,8 @@ jobs:
       - run:
           name: Build front-end
           command: |
+            pwd
+            dir
             # Your code here
             cd frontend
             npm install
@@ -75,6 +80,8 @@ jobs:
       - run:
           name: Back-end build
           command: |
+            pwd
+            dir
             # Your code here
             cd backend
             npm install
@@ -93,6 +100,8 @@ jobs:
       - run:
           name: Run Frontend unit tests
           command: |
+            pwd
+            dir
             # Your code here
             cd frontend
             npm install
@@ -108,6 +117,8 @@ jobs:
       - run:
           name: Run Backend unit tests
           command: |
+            pwd
+            dir
             # Your code here
             cd backend
             npm install
@@ -124,6 +135,8 @@ jobs:
       - run:
           name: Run Frontend audit tests
           command: |
+            pwd
+            dir
             # Your code here
             cd frontend
             npm install
@@ -142,6 +155,8 @@ jobs:
       - run:
           name: Run Backend audit tests
           command: |
+            pwd
+            dir
             # Your code here
             cd backend
             npm install
@@ -160,6 +175,8 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
+            pwd
+            dir
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
@@ -169,6 +186,8 @@ jobs:
       - run:
           name: Ensure front-end infrastructure exist
           command: |
+            pwd
+            dir
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
               --tags project=udapeople \
@@ -178,6 +197,8 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
+            pwd
+            dir
             # Your code here
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
@@ -205,11 +226,15 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            pwd
+            dir
             # Your code here
             apk add --update --no-cache tar gzip ansible aws-cli
       - run:
           name: Configure server
           command: |
+            pwd
+            dir
             # Your code here
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
@@ -233,6 +258,8 @@ jobs:
       - run:
           name: Run migrations
           command: |
+            pwd
+            dir
             # Your code here 
             cd backend
             npm install
@@ -243,8 +270,12 @@ jobs:
       - run:
           name: Send migration results to kvdb.io 
           command: |
+            pwd
+            dir
             cat ~/project/backend/migrations_dump.txt
-            if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt ; then
+            if grep -q "
+            pwd
+            dir~/project/backend/migrations_dump.txt ; then
                 echo Hello
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
                 curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
@@ -270,6 +301,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            pwd
+            dir
             # your code here
             # apk add --update --no-cache tar gzip nodejs npm aws-cli curl
             npm update
@@ -277,6 +310,8 @@ jobs:
       - run:
           name: Get backend url
           command: |
+            pwd
+            dir
             # your code here
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
@@ -286,6 +321,8 @@ jobs:
       - run:
           name: Deploy frontend objects 
           command: |
+            pwd
+            dir
             # your code here
             cd frontend
             export NODE_OPTIONS=--openssl-legacy-provider
@@ -313,11 +350,15 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            pwd
+            dir
             # your code here
             apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
       - run:
           name: Deploy backend
           command: |
+            pwd
+            dir
             # your code here
             cd backend
             npm install
@@ -343,12 +384,14 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # fail fast here. Need to get my migrations working
-            return 1
+            pwd
+            dir
             apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl
       - run:
           name: Get backend url
           command: |
+            pwd
+            dir
             # your code here
             # Fetch and prepare the BACKEND_IP env var
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
@@ -357,6 +400,8 @@ jobs:
       - run:
           name: Backend smoke test
           command: |
+            pwd
+            dir
             # your code here
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
@@ -373,6 +418,8 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
+            pwd
+            dir
             # your code here
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
             echo ${URL} 
