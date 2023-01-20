@@ -33,14 +33,12 @@ commands:
             echo ${SUCCESS}
             if [ ${SUCCESS} = 1 ]
             then
-                cd ~/project/backend/
+                pwd
+                cd project/backend/
                 npm install
                 #  Add revert code here.
                 npm run migrations:revert
                 echo ${SUCCESS}
-                # return 0
-            # else
-            #     return 1
             fi
             
 jobs:
@@ -243,6 +241,9 @@ jobs:
           command: |
             # Your code here  
             # if (( $(curl WEBSITEURL | grep -c "incident-title") > 0 )) ; then
+            
+            # channge this pending
+
             if grep -q "pending" ~/project/backend/migrations_dump.txt ; then
                 echo Hello
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
