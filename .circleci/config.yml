@@ -244,7 +244,7 @@ jobs:
           name: Send migration results to kvdb.io 
           command: |
             cat ~/project/backend/migrations_dump.txt
-            if grep -q "pending" ~/project/backend/migrations_dump.txt ; then
+            if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt ; then
                 echo Hello
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
                 curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
@@ -270,8 +270,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            # fail fast here. Need to get my migrations working
-            return 1
             # your code here
             # apk add --update --no-cache tar gzip nodejs npm aws-cli curl
             npm update
@@ -345,6 +343,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            # fail fast here. Need to get my migrations working
+            return 1
             apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl
       - run:
           name: Get backend url
