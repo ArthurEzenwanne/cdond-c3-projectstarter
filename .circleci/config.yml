@@ -23,8 +23,7 @@ commands:
     parameters:  
       workflow_id: 
         type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}
-      # Add parameter here     
+        default: ${CIRCLE_WORKFLOW_ID:0:7}    
     steps:
       - run:
           name: Revert migrations
@@ -381,7 +380,7 @@ jobs:
             then
                 # Change this to 0 after the job fails
                 echo "Frontend Smoke Test Success"
-                return 0
+                return 1
             else
                 echo "Frontend Smoke Test Failed"
                 return 1
