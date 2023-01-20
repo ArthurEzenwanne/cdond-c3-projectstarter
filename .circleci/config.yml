@@ -358,8 +358,8 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            netstat -ln | grep 3030
-            sudo netstat -tulpn
+            # netstat -ln | grep 3030
+            # sudo netstat -tulpn
 
             echo 'Hello Test'
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
