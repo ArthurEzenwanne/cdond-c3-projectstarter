@@ -360,10 +360,19 @@ jobs:
             echo "${API_URL}"
             netstat -ln | grep 3030
             sudo netstat -tulpn
-            
-            # if (( $(curl WEBSITEURL | grep -c "incident-title") > 0 )) ; then     
-            
-            if (( $(curl "https://curl.se" | grep "Intrastructure") )) ; then
+
+            echo 'Hello Test'
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+            # export SUCCESS=$(curl --insecure  "https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7}")
+            # echo ${SUCCESS}
+            # if [ (${SUCCESS} | grep -c "Intrastructure") > 0 ]
+            # then
+
+            # export WORD_TOKEN_TEST=$(curl --insecure "https://curl.se")
+            # echo ${WORD_TOKEN}
+
+            if [ (${WORD_TOKEN} | grep -c "Intrastructure") > 0 ]
+            then
                 echo "Test successful"
             else
                 echo "Test unsuccessful"
