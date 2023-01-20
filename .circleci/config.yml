@@ -171,7 +171,12 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - run: npm install -y tar gzip
+      - run: 
+          name: Install dependencies
+          command: |
+            pwd
+            dir 
+            npm install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
           command: |
@@ -205,6 +210,8 @@ jobs:
             --filters "Name=tag:project,Values=udapeople" \
             --output text >> ~/project/.circleci/ansible/inventory.txt
             # exit 1
+            pwd
+            dir
       - persist_to_workspace:
           root: ~/
           # root: .circleci/ansible
@@ -227,17 +234,19 @@ jobs:
           name: Install dependencies
           command: |
             pwd
-            dir
+            ls
             # Your code here
             apk add --update --no-cache tar gzip ansible aws-cli
       - run:
           name: Configure server
           command: |
             pwd
-            dir
+            ls
             # Your code here
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
+            pwd
+            ls
       - persist_to_workspace:
           root: ~/
           paths:
@@ -273,13 +282,13 @@ jobs:
             pwd
             dir
             cat ~/project/backend/migrations_dump.txt
-            if grep -q "
-            pwd
-            dir~/project/backend/migrations_dump.txt ; then
+            if grep -q "has been executed successfully" ~/project/backend/migrations_dump.txt ; then
                 echo Hello
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
                 curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
                 cat ~/project/backend/migrations_dump.txt
+                pwd
+                dir
                 # return 0
             # else 
             #     return 1
@@ -332,10 +341,13 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             echo "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
             # aws s3 cp dist s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            # echo "s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7}"
+            # echo "s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7}"            
+            pwd
+            dir
       # Here's where you will add some code to rollback on failure  
-      - revert-migrations    
       - destroy-environment
+      - revert-migrations    
+      
                     
   deploy-backend:
     docker:
@@ -351,14 +363,14 @@ jobs:
           name: Install dependencies
           command: |
             pwd
-            dir
+            ls
             # your code here
             apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
       - run:
           name: Deploy backend
           command: |
             pwd
-            dir
+            ls
             # your code here
             cd backend
             npm install
@@ -371,9 +383,12 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is ------- $(cat inventory.txt)"
             ansible-playbook -i inventory.txt deploy-backend.yml
+            pwd
+            ls
       # Here's where you will add some code to rollback on failure  
-      - revert-migrations    
       - destroy-environment
+      - revert-migrations    
+      
 
   smoke-test:
     docker:
@@ -385,13 +400,13 @@ jobs:
           name: Install dependencies
           command: |
             pwd
-            dir
+            ls
             apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl
       - run:
           name: Get backend url
           command: |
             pwd
-            dir
+            ls
             # your code here
             # Fetch and prepare the BACKEND_IP env var
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
@@ -401,7 +416,7 @@ jobs:
           name: Backend smoke test
           command: |
             pwd
-            dir
+            ls
             # your code here
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
@@ -419,7 +434,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             pwd
-            dir
+            ls
             # your code here
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
             echo ${URL} 
@@ -433,8 +448,9 @@ jobs:
                 return 1
             fi
       # Here's where you will add some code to rollback on failure  
-      - revert-migrations  
       - destroy-environment
+      - revert-migrations  
+      
 
   cloudfront-update:
     docker:
