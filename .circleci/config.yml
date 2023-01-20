@@ -368,15 +368,15 @@ jobs:
             # if [ (${SUCCESS} | grep -c "Intrastructure") > 0 ]
             # then
 
-            export WORD_TOKEN_TEST=$(curl --insecure "https://curl.se")
-            echo ${WORD_TOKEN}
+            # export WORD_TOKEN_TEST=$(curl --insecure "https://curl.se")
+            # echo ${WORD_TOKEN}
 
-            if [ (${WORD_TOKEN} | grep -c "Intrastructure") > 0 ]
-            then
-                echo "Test successful"
-            else
-                echo "Test unsuccessful"
-            fi
+            # if [ (${WORD_TOKEN} | grep -c "Intrastructure") > 0 ]
+            # then
+            #     echo "Test successful"
+            # else
+            #     echo "Test unsuccessful"
+            # fi
 
             if curl "${API_URL}/api/status" | grep "ok"
             then
