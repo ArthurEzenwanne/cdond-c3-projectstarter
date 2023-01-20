@@ -33,7 +33,7 @@ commands:
             echo ${SUCCESS}
             if [ ${SUCCESS} = 1 ]
             then
-                cd ~/project/backend
+                cd ~/project/backend/
                 npm install
                 #  Add revert code here.
                 npm run migrations:revert
@@ -358,32 +358,13 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            # netstat -ln | grep 3030
-            # sudo netstat -tulpn
-
-            echo 'Hello Test'
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            # export SUCCESS=$(curl --insecure  "https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7}")
-            # echo ${SUCCESS}
-            # if [ (${SUCCESS} | grep -c "Intrastructure") > 0 ]
-            # then
-
-            # export WORD_TOKEN_TEST=$(curl --insecure "https://curl.se")
-            # echo ${WORD_TOKEN}
-
-            # if [ (${WORD_TOKEN} | grep -c "Intrastructure") > 0 ]
-            # then
-            #     echo "Test successful"
-            # else
-            #     echo "Test unsuccessful"
-            # fi
 
             if curl "${API_URL}/api/status" | grep "ok"
             then
-                echo "Frontend Smoke Test Success"
+                echo "Backend Smoke Test Success"
                 return 0
             else
-                echo "Frontend Smoke Test Failed"
+                echo "Backend Smoke Test Failed"
                 return 1
             fi
       - run:
@@ -395,10 +376,10 @@ jobs:
             if curl -s ${URL} | grep "Welcome"
             then
                 # Change this to 0 after the job fails
-                echo "Backend Smoke Test Success"
+                echo "Frontend Smoke Test Success"
                 return 1
             else
-                echo "Backend Smoke Test Failed"
+                echo "Frontend Smoke Test Failed"
                 return 1
             fi
       # Here's where you will add some code to rollback on failure  
