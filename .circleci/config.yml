@@ -236,7 +236,7 @@ jobs:
             npm install
             # Run and save the migration output
             npm run migrations >> migrations_dump.txt
-            cat migrations_dump.txt
+            # cat migrations_dump.txt
             # exit 1
       - run:
           name: Send migration results to kvdb.io 
@@ -244,6 +244,7 @@ jobs:
             # Your code here  
             # if (( $(curl WEBSITEURL | grep -c "incident-title") > 0 )) ; then
             if grep -q "pending" ~/project/backend/migrations_dump.txt ; then
+                echo Hello
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
                 curl --insecure "https://kvdb.io/6Yzqx46HVg31kkVyd6NpuX/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
                 cat ~/project/backend/migrations_dump.txt
@@ -253,8 +254,8 @@ jobs:
             fi
             # exit 1
       # Here's where you will add some code to rollback on failure      
-      - destroy-environment   
       - revert-migrations    
+      - destroy-environment   
 
   deploy-frontend:
     docker:
@@ -295,8 +296,8 @@ jobs:
             # aws s3 cp dist s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             # echo "s3://udapeople-buc-ogidi-${CIRCLE_WORKFLOW_ID:0:7}"
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment
       - revert-migrations    
+      - destroy-environment
                     
   deploy-backend:
     docker:
@@ -329,8 +330,8 @@ jobs:
             echo "Contents  of the inventory.txt file is ------- $(cat inventory.txt)"
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
+      - revert-migrations    
       - destroy-environment
-      - revert-migrations  
 
   smoke-test:
     docker:
@@ -392,8 +393,8 @@ jobs:
                 return 1
             fi
       # Here's where you will add some code to rollback on failure  
+      - revert-migrations  
       - destroy-environment
-      - revert-migrations 
 
   # cloudfront-update:
   #   docker:
