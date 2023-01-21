@@ -247,7 +247,7 @@ jobs:
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
             pwd
-            ls
+            dir
       - persist_to_workspace:
           root: ~/
           paths:
@@ -316,7 +316,7 @@ jobs:
             # your code here
             # apk add --update --no-cache tar gzip nodejs npm aws-cli curl
             npm update
-            npm install -y tar gzip nodejs npm aws-cli curl
+            npm install -y tar gzip nodejs npm curl
       - run:
           name: Get backend url
           command: |
@@ -335,8 +335,8 @@ jobs:
             dir
             # your code here
             cd frontend
-            # what does this NODE_OPTIONS do
-            # export NODE_OPTIONS=--openssl-legacy-provider
+            # what does this NODE_OPTIONS do (seems it helps for backwards compatibility)
+            export NODE_OPTIONS=--openssl-legacy-provider
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
@@ -369,7 +369,7 @@ jobs:
             # your code here
             # apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
             npm update
-            npm install -y tar gzip nodejs npm aws-cli ansible
+            npm install -y tar gzip nodejs npm ansible
       - run:
           name: Deploy backend
           command: |
@@ -407,7 +407,7 @@ jobs:
             dir
             # apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl
             npm update
-            npm install -y tar gzip nodejs npm aws-cli ansible curl
+            npm install -y tar gzip nodejs npm ansible curl
       - run:
           name: Get backend url
           command: |
@@ -469,7 +469,7 @@ jobs:
           name: Install dependencies
           command: |
             npm update
-            npm install -y tar gzip nodejs npm aws-cli
+            npm install -y tar gzip nodejs npm 
       - run:
           name: Update cloudfront distribution
           command: |
