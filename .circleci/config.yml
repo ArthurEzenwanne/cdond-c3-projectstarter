@@ -41,7 +41,7 @@ commands:
             then
                 pwd
                 dir
-                cd /backend/
+                cd backend 
                 npm install
                 #  Add revert code here.
                 npm run migrations:revert
