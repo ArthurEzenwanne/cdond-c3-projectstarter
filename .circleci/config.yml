@@ -221,7 +221,8 @@ jobs:
   configure-infrastructure:
     docker:
       # Docker image here that supports Ansible
-      - image: python:3.7-alpine3.16
+      # - image: python:3.7-alpine3.16
+      - image: cimg/aws:2022.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -232,14 +233,16 @@ jobs:
           name: Install dependencies
           command: |
             pwd
-            ls
+            dir
             # Your code here
-            apk add --update --no-cache tar gzip ansible aws-cli
+            # apk add --update --no-cache tar gzip ansible aws-cli
+            npm update
+            npm install -y tar gzip nodejs npm ansible aws-cli
       - run:
           name: Configure server
           command: |
             pwd
-            ls
+            dir
             # Your code here
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
@@ -332,7 +335,8 @@ jobs:
             dir
             # your code here
             cd frontend
-            export NODE_OPTIONS=--openssl-legacy-provider
+            # what does this NODE_OPTIONS do
+            # export NODE_OPTIONS=--openssl-legacy-provider
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
@@ -349,7 +353,8 @@ jobs:
   deploy-backend:
     docker:
       # Docker image here that supports Ansible
-      - image: python:3.7-alpine3.16
+      # - image: python:3.7-alpine3.16
+      - image: cimg/aws:2022.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -360,14 +365,16 @@ jobs:
           name: Install dependencies
           command: |
             pwd
-            ls
+            dir
             # your code here
-            apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
+            # apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
+            npm update
+            npm install -y tar gzip nodejs npm aws-cli ansible
       - run:
           name: Deploy backend
           command: |
             pwd
-            ls
+            dir
             # your code here
             cd backend
             npm install
@@ -376,12 +383,12 @@ jobs:
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             pwd
-            ls
+            dir
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is ------- $(cat inventory.txt)"
             ansible-playbook -i inventory.txt deploy-backend.yml
             pwd
-            ls
+            dir
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
       - revert-migrations    
@@ -389,20 +396,23 @@ jobs:
   smoke-test:
     docker:
       # Lightweight Docker image       
-      - image: python:3.7-alpine3.16
+      # - image: python:3.7-alpine3.16
+      - image: cimg/aws:2022.11
     steps:
       # Checkout code from git
       - run:
           name: Install dependencies
           command: |
             pwd
-            ls
-            apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl
+            dir
+            # apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl
+            npm update
+            npm install -y tar gzip nodejs npm aws-cli ansible curl
       - run:
           name: Get backend url
           command: |
             pwd
-            ls
+            dir
             # your code here
             # Fetch and prepare the BACKEND_IP env var
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
@@ -412,7 +422,7 @@ jobs:
           name: Backend smoke test
           command: |
             pwd
-            ls
+            dir
             # your code here
             export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=udapeople" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
@@ -430,7 +440,7 @@ jobs:
           name: Frontend smoke test.
           command: |
             pwd
-            ls
+            dir
             # your code here
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
             echo ${URL} 
@@ -438,7 +448,7 @@ jobs:
             then
                 # Change this to 0 after the job fails
                 echo "Frontend Smoke Test Success"
-                return 1
+                return 0
             else
                 echo "Frontend Smoke Test Failed"
                 return 1
@@ -446,7 +456,6 @@ jobs:
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
       - revert-migrations  
-      
 
   cloudfront-update:
     docker:
@@ -460,7 +469,7 @@ jobs:
           name: Install dependencies
           command: |
             npm update
-            npm install -y tar gzip nodejs npm aws-cli curl
+            npm install -y tar gzip nodejs npm aws-cli
       - run:
           name: Update cloudfront distribution
           command: |
@@ -522,8 +531,8 @@ workflows:
           requires: [run-migrations]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
+      - cloudfront-update:
+          requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
 
