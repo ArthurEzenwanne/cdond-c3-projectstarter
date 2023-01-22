@@ -467,10 +467,10 @@ jobs:
             then
                 # Change this to 0 after the job fails
                 echo "Frontend Smoke Test Success"
-                return 1
+                exit 1
             else
                 echo "Frontend Smoke Test Failed"
-                return 1
+                exit 1
             fi
       # Here's where you will add some code to rollback on failure  
       - destroy-environment
