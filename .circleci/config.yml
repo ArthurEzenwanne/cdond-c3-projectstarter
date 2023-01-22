@@ -422,7 +422,7 @@ jobs:
             npm update 
             npm install -y tar gzip nodejs npm 
       - run:
-          name: Get old stack workflow id and Remove old stacks and files
+          name: Get and remove old stacks and files
           command: |
             # your code here            
             # Fetch the Old workflow ID
