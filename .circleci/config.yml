@@ -242,6 +242,7 @@ jobs:
                 # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
                 curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
                 cat ~/project/backend/migrations_dump.txt
+            fi
       # Here's where you will add some code to rollback on failure      
       - destroy-environment   
       - revert-migrations    
@@ -418,7 +419,7 @@ jobs:
             npm update 
             npm install -y tar gzip nodejs npm 
       - run:
-          name: Get old stack workflow id and Remove old stacks and files
+          name: Get and remove old stacks and files
           command: |
             # your code here            
             # Fetch the Old workflow ID
