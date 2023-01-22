@@ -40,12 +40,12 @@ commands:
             then
                 pwd
                 dir
-                cd ..
-                pwd
-                dir
-                cd ..
-                pwd
-                dir
+                # cd ..
+                # pwd
+                # dir
+                # cd ..
+                # pwd
+                # dir
                 cd backend 
                 npm install
                 #  Add revert code here.
@@ -297,16 +297,16 @@ jobs:
                 pwd
                 dir
                 # return 0
-            elif grep -q "migrations are pending" ~/project/backend/migrations_dump.txt ; then
-                echo HelloWoman
-                # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
-                curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
-                cat ~/project/backend/migrations_dump.txt
-                pwd
-                dir
-                # return 0
-            # else 
-            #     return 1
+            # elif grep -q "migrations are pending" ~/project/backend/migrations_dump.txt ; then
+            #     echo HelloWoman
+            #     # If you are using kvdb.io, generate the bucket ID "9GE4jRtKznmVKRfvdBABBe" in your local terminal first
+            #     curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
+            #     cat ~/project/backend/migrations_dump.txt
+            #     pwd
+            #     dir
+            #     # return 0
+            # # else 
+            # #     return 1
             fi
             # exit 1
       - persist_to_workspace:
