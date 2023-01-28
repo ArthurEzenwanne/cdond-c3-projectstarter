@@ -25,6 +25,8 @@ commands:
         type: string
         default: ${CIRCLE_WORKFLOW_ID:0:7}    
     steps:
+      - attach_workspace:
+          at: ~/
       - run:
           name: Revert migrations
           when: on_fail
@@ -243,6 +245,12 @@ jobs:
                 curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
                 cat ~/project/backend/migrations_dump.txt
             fi
+            # exit 1
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/backend
+            - home/circleci/project/backend
       # Here's where you will add some code to rollback on failure      
       - destroy-environment   
       - revert-migrations    
