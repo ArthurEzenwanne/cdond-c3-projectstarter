@@ -23,8 +23,10 @@ commands:
     parameters:  
       workflow_id: 
         type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}    
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
+      - attach_workspace:
+          at: ~/
       - run:
           name: Revert migrations
           when: on_fail
@@ -193,7 +195,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["9b:34:78:6f:cb:95:cc:75:61:af:3a:3e:3a:bb:72:d3"]
+          fingerprints: ["58:58:5e:7e:73:cd:fa:8c:97:ff:73:59:5f:c1:ef:46"]
       - attach_workspace:
           at: ~/
       - run:
@@ -243,6 +245,12 @@ jobs:
                 curl --insecure "https://kvdb.io/KiP8dNxt1g1ZAyrgEnwPWk/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d '1'
                 cat ~/project/backend/migrations_dump.txt
             fi
+            # exit 1
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/backend
+            - home/circleci/project/backend
       # Here's where you will add some code to rollback on failure      
       - destroy-environment   
       - revert-migrations    
@@ -293,7 +301,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["9b:34:78:6f:cb:95:cc:75:61:af:3a:3e:3a:bb:72:d3"]
+          fingerprints: ["58:58:5e:7e:73:cd:fa:8c:97:ff:73:59:5f:c1:ef:46"]
       - attach_workspace:
           at: ~/
       - run:
@@ -438,12 +446,12 @@ jobs:
 
             if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
             then
-              echo "-------------------------Delete Confirmed----------------------------"
+              echo "-------------------------Delete Confirmed---------------------------"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             else
-              echo "--------------------------Cannot Cleanup-----------------------------"
+              echo "--------------------------Cannot Cleanup----------------------------"
             fi
       - destroy-environment
       - revert-migrations              
@@ -473,12 +481,12 @@ workflows:
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
-          requires: [run-migrations]
+          requires: [run-migrations] 
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+      # - cleanup:
+      #     requires: [cloudfront-update]
 
 # VS Code Extension Version: 1.5.1

@@ -43,5 +43,6 @@
   roles:
     # Your code here
     - configure-server
+    - configure-prometheus-node-exporter
 
 # VS Code Extension Version: 1.5.1
