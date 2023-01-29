@@ -397,6 +397,10 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
+            # disable buffering
+            export PYTHONUNBUFFERED=1
+            # increase wait time to 20mins
+            no_output_timeout: 20m
             # your code here
             export OldWorkflowID=$(aws cloudformation list-exports \
             --query "Exports[?Name==\`WorkflowID\`].Value" \
