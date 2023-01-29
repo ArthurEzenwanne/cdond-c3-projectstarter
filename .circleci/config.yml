@@ -396,11 +396,11 @@ jobs:
             npm install -y tar gzip nodejs npm 
       - run:
           name: Update cloudfront distribution
+          # increase wait time to 20mins
+          no_output_timeout: 20m
           command: |
             # disable buffering
             export PYTHONUNBUFFERED=1
-            # increase wait time to 20mins
-            no_output_timeout: 20m
             # your code here
             export OldWorkflowID=$(aws cloudformation list-exports \
             --query "Exports[?Name==\`WorkflowID\`].Value" \
